@@ -5,36 +5,16 @@ from api.models import Product
 from api.serilalizer import ProductSerializer
 from api.pagination import CustomPagination
 
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework import status
+
 from api.models import Product
 from api.serilalizer import ProductSerializer
 
-@api_view(['GET', 'POST', 'PUT'])
+@api_view(['POST', 'PUT'])
 def manage_products(request):
 
-    # ---------- GET ----------
-    if request.method == 'GET':
-        product_id = request.data.get('id')
-        if not product_id:
-            return Response(
-                {'message': 'Product ID is required'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        try:
-            product = Product.objects.get(id=product_id)
-            serializer = ProductSerializer(product)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Product.DoesNotExist:
-            return Response(
-                {'message': 'Product not found'},
-                status=status.HTTP_404_NOT_FOUND
-            )
 
     # ---------- POST ----------
-    elif request.method == 'POST':
+    if request.method == 'POST':
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -81,6 +61,24 @@ def manage_products(request):
         {'message': 'Method not allowed'},
         status=status.HTTP_405_METHOD_NOT_ALLOWED
     )
+# -------- Get Specific Product --------
+@api_view(['POST'])
+def get_product(request):
+    product_id = request.data.get('id')
+    if not product_id:
+        return Response(
+            {'message': 'Product ID is required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    try:
+        product = Product.objects.get(id=product_id)
+        serializer = ProductSerializer(product)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Product.DoesNotExist:
+        return Response(
+            {'message': 'Product not found'},
+            status=status.HTTP_404_NOT_FOUND
+        )
 
 # -------- Get All Products --------
 @api_view(['GET'])
