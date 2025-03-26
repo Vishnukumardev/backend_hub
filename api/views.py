@@ -5,16 +5,25 @@ from api.models import Product
 from api.serilalizer import ProductSerializer
 from api.pagination import CustomPagination
 
+# -------- Manage Products (Create, Update, List) --------
 
-from api.models import Product
-from api.serilalizer import ProductSerializer
-
-@api_view(['POST', 'PUT'])
+@api_view(['GET', 'POST', 'PUT'])
 def manage_products(request):
+    # ---------- GET ----------
+    if request.method == 'GET':
+        products = Product.objects.exclude(status=1)
 
+        if not products.exists():
+            return Response(
+                {"message": "No products found"},
+                status=status.HTTP_204_NO_CONTENT
+            )
+
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     # ---------- POST ----------
-    if request.method == 'POST':
+    elif request.method == 'POST':
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -61,6 +70,8 @@ def manage_products(request):
         {'message': 'Method not allowed'},
         status=status.HTTP_405_METHOD_NOT_ALLOWED
     )
+
+
 # -------- Get Specific Product --------
 @api_view(['POST'])
 def get_product(request):
