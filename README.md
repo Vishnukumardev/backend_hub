@@ -29,8 +29,8 @@ This is the backend hub built with Django, designed to serve as a backend for mu
 ### 🔁 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/backend_hub.git
-cd backend_hub
+git clone https://github.com/Vishnukumardev/backend_hub.git
+cd deployment
 ```
 
 ---
