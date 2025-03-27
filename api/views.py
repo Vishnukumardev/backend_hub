@@ -20,7 +20,7 @@ def manage_products(request):
             )
 
         serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"results":serializer.data}, status=status.HTTP_200_OK)
 
     # ---------- POST ----------
     elif request.method == 'POST':
